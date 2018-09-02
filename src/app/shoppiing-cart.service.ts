@@ -60,7 +60,9 @@ export class ShoppingCartService {
       .subscribe(item => {
         let d = item.payload.val() || 0;
         items$.update({
-          product: product,
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price,
           quantity: (d['quantity'] || 0) + change
         });
       });

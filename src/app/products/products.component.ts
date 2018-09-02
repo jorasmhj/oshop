@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/product';
 import { switchMap } from 'rxjs/operators';
 import { ShoppingCartService } from '../shoppiing-cart.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-products',
@@ -17,6 +17,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   category: string;
   cart: any;
   subscription;
+  now = moment().format('LLLL');
 
   constructor(
     productService: ProductService,
@@ -44,6 +45,17 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    let startdate = '20.03.2014';
+    let repeteDays = 5;
+    let dates = [];
+    for (let i = 1; i <= repeteDays; i++) {
+      let new_date = moment(startdate, 'DD-MM-YYYY').add('days', 1);
+      startdate = new_date.format('DD.MM.YYYY');
+      dates.push(new_date);
+      console.log(startdate);
+    }
+
+    // console.log(dates);
     this.subscription = (await this.cartService.getCart()).subscribe(
       cart => (this.cart = cart)
     );

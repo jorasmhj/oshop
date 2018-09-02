@@ -7,7 +7,12 @@ export class ShoppingCart {
     for (let productId in itemsMap) {
       if (productId) {
         let item = itemsMap[productId];
-        this.items.push(new ShoppingCartItem(item.product, item.quantity));
+        this.items.push(
+          new ShoppingCartItem({
+            ...item,
+            key: productId
+          })
+        );
       }
     }
   }
