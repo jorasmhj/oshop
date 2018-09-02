@@ -17,11 +17,14 @@ export class ProductService {
   getAll(): Observable<any[]> {
     return this.db.list('/products').snapshotChanges().pipe(
       map(items => {
-        return items.map(a => {
-          const data = a.payload.val();
-          const key = a.payload.key;
-          return { key, data };
+        let data = [];
+        items.forEach(element => {
+          let d = element.payload.val();
+          const key = element.payload.key;
+          d['key'] = key;
+          data.push(d);
         });
+        return data;
       })
     );
   }
