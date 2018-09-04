@@ -1,4 +1,4 @@
-<div *ngIf="product.title" class="card" style="width: 18rem; margin-bottom:10px;">
+<div *ngIf="product.title" class="card" style="width: 18rem; margin-bottom:10px;" [@fallIn]='state'>
   <img *ngIf="product.imageUrl" class="card-img-top" [src]="product.imageUrl" alt="/{ product.title }}">
   <div class="card-body">
     <h5 class="card-title">{{ product.title }}</h5>

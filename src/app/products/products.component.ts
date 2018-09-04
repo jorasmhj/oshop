@@ -1,67 +1,55 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/product';
 import { switchMap } from 'rxjs/operators';
 import { ShoppingCartService } from '../shoppiing-cart.service';
-import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { ShoppingCart } from '../models/shopping-cart';
+import { moveIn, fallIn } from '../app.animations';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css']
+  styleUrls: ['./products.component.css'],
+  animations: [moveIn(), fallIn()]
 })
-export class ProductsComponent implements OnInit, OnDestroy {
+export class ProductsComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   category: string;
-  cart: any;
+  cart: Observable<ShoppingCart>;
   subscription;
-  now = moment().format('LLLL');
 
   constructor(
-    productService: ProductService,
-    route: ActivatedRoute,
+    private productService: ProductService,
+    private route: ActivatedRoute,
     private cartService: ShoppingCartService
-  ) {
-    productService
+  ) {}
+
+  async ngOnInit() {
+    this.cart = await this.cartService.getCart();
+    this.getAll();
+  }
+
+  async getAll() {
+    this.productService
       .getAll()
       .pipe(
         switchMap(p => {
           this.products = p;
-          return route.queryParamMap;
+          return this.route.queryParamMap;
         })
       )
-      .subscribe(p => {
-        route.queryParamMap.subscribe(params => {
-          this.category = params.get('category');
-          this.filteredProducts = this.category
-            ? this.products.filter(
-                product => product.category === this.category
-              )
-            : this.products;
-        });
+      .subscribe(params => {
+        this.category = params.get('category');
+        this.applyFilter();
       });
   }
 
-  async ngOnInit() {
-    let startdate = '20.03.2014';
-    let repeteDays = 5;
-    let dates = [];
-    for (let i = 1; i <= repeteDays; i++) {
-      let new_date = moment(startdate, 'DD-MM-YYYY').add('days', 1);
-      startdate = new_date.format('DD.MM.YYYY');
-      dates.push(new_date);
-      console.log(startdate);
-    }
-
-    // console.log(dates);
-    this.subscription = (await this.cartService.getCart()).subscribe(
-      cart => (this.cart = cart)
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+  private applyFilter() {
+    this.filteredProducts = this.category
+      ? this.products.filter(product => product.category === this.category)
+      : this.products;
   }
 }

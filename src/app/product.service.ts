@@ -7,26 +7,28 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductService {
-
-  constructor(private db: AngularFireDatabase) { }
+  constructor(private db: AngularFireDatabase) {}
 
   create(product) {
     return this.db.list('/products').push(product);
   }
 
   getAll(): Observable<any[]> {
-    return this.db.list('/products').snapshotChanges().pipe(
-      map(items => {
-        let data = [];
-        items.forEach(element => {
-          let d = element.payload.val();
-          const key = element.payload.key;
-          d['key'] = key;
-          data.push(d);
-        });
-        return data;
-      })
-    );
+    return this.db
+      .list('/products')
+      .snapshotChanges()
+      .pipe(
+        map(items => {
+          let data = [];
+          items.forEach(element => {
+            let d = element.payload.val();
+            const key = element.payload.key;
+            d['key'] = key;
+            data.push(d);
+          });
+          return data;
+        })
+      );
   }
 
   get(productId): Observable<any> {
@@ -40,5 +42,4 @@ export class ProductService {
   delete(productId) {
     this.db.object('/products/' + productId).remove();
   }
-
 }

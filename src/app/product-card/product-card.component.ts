@@ -2,11 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Product } from '../models/product';
 import { ShoppingCartService } from '../shoppiing-cart.service';
 import { ShoppingCart } from '../models/shopping-cart';
+import { moveIn, fallIn } from '../app.animations';
 
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.css']
+  styleUrls: ['./product-card.component.css'],
+  animations: [moveIn(), fallIn()]
 })
 export class ProductCardComponent implements OnInit {
   @Input('product')

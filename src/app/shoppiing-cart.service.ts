@@ -59,12 +59,20 @@ export class ShoppingCartService {
       .pipe(take(1))
       .subscribe(item => {
         let d = item.payload.val() || 0;
-        items$.update({
-          title: product.title,
-          imageUrl: product.imageUrl,
-          price: product.price,
-          quantity: (d['quantity'] || 0) + change
-        });
+        let quantity = (d['quantity'] || 0) + change;
+        if (quantity === 0) items$.remove();
+        else
+          items$.update({
+            title: product.title,
+            imageUrl: product.imageUrl,
+            price: product.price,
+            quantity: quantity
+          });
       });
+  }
+
+  async clearCart() {
+    let cartID = await this.getOrCreateCartId();
+    this.db.object('/shopping-carts/' + cartID + '/items').remove();
   }
 }
