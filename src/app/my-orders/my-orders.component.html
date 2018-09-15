@@ -1,3 +1,17 @@
-<p>
-  my-orders works!
-</p>
+<h2>Orders</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="width:230px;">Customer</th>
+      <th class="text-center" style="width:230px;">Date</th>
+      <th class="text-right" style="width:200px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td>{{ order.shipping.name }}</td>
+      <td class="text-center">{{ order.datePlaced | date }}</td>
+      <td class="text-right">View</td>
+    </tr>
+  </tbody>
+</table>

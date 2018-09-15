@@ -14,6 +14,7 @@ import { moveIn, fallIn } from '../app.animations';
   styleUrls: ['./products.component.css'],
   animations: [moveIn(), fallIn()]
 })
+
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
